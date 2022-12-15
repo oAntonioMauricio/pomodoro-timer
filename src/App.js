@@ -1,12 +1,13 @@
 import './App.css';
 import "./Components/Pomodoro"
-import Pomodoro from './Components/Pomodoro';
+
+import Timer from './Components/Timer';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Pomodoro />
+        <Timer/>
       </header>
     </div>
   );
