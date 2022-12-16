@@ -7,6 +7,8 @@ export default function Timer() {
     const [session, setSession] = useState(25);
     const [timer, setTimer] = useState(1500);
 
+    const [active, setActive] = useState(false);
+
     // Format digits
     const padTime = time => {
         return String(time).length === 1 ? `0${time}` : `${time}`;
@@ -29,33 +31,61 @@ export default function Timer() {
         setPause(5);
         setSession(25);
         setTimer(1500);
+        setActive(false);
     }
 
     function handlePauseDec() {
-        if (pause > 1) {
-            setPause(pause - 1)
+        if (active === false) {
+            if (pause > 1) {
+                setPause(pause - 1)
+            }
         }
     }
 
     function handlePauseInc() {
-        if (pause < 60) {
-            setPause(pause + 1)
+        if (active === false) {
+            if (pause < 60) {
+                setPause(pause + 1)
+            }
         }
     }
 
     function handleSessionDec() {
-        if (session > 1) {
-            setSession(session - 1);
-            setTimer(timer - 60);
+        if (active === false) {
+            if (session > 1) {
+                setSession(session - 1);
+                setTimer(timer - 60);
+            }
         }
     }
 
     function handleSessionInc() {
-        if (session < 60) {
-            setSession(session + 1)
-            setTimer(timer + 60);
+        if (active === false) {
+            if (session < 60) {
+                setSession(session + 1)
+                setTimer(timer + 60);
+            }
         }
     }
+
+    function startPause() {
+        setActive(!active);
+    }
+
+
+    React.useEffect(() => {
+        let clock;
+        if (timer > 0 && active) {
+            clock = setTimeout(() => setTimer(timer => timer - 1), 1000);
+        }
+
+        return () => {
+            if (clock) {
+                clearTimeout(clock);
+            }
+        };
+    }, [timer, active]);
+
 
     return (
         <div className='flex flex-col gap-7'>
@@ -123,7 +153,7 @@ export default function Timer() {
 
                 {/*Start & Reset Buttons */}
                 <div className='flex flex-row mt-4'>
-                    <button id="start_stop" type="button" className="grow text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">Start</button>
+                    <button id="start_stop" onClick={startPause} type="button" className="grow text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">{active ? "Pause" : "Start"}</button>
                     <button id="reset" onClick={reset} className="relative inline-flex items-center justify-center p-0.5 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                         <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-800 rounded-md group-hover:bg-opacity-0">
                             Reset
