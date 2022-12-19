@@ -82,6 +82,7 @@ export default function Timer() {
 
     function startPause() {
         setActive(!active);
+        document.getElementById("beep").load();
     }
 
 
