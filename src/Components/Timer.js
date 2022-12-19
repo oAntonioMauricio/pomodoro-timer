@@ -97,8 +97,8 @@ export default function Timer() {
 
         else if (timer === 0 && active && !pauseBreak) {
             el.play();
-            setTimeout(() => setPauseBreak(!pauseBreak), 1000);
-            setTimeout(() => setTimer(pause), 1000);
+            setTimeout(() => setPauseBreak(!pauseBreak), 2000);
+            setTimeout(() => setTimer(pause), 2000);
         }
 
         else if (timer > 0 && active && pauseBreak) {
@@ -107,8 +107,8 @@ export default function Timer() {
 
         else if (timer === 0 && active && pauseBreak) {
             el.play();
-            setTimeout(() => setPauseBreak(!pauseBreak), 1000);
-            setTimeout(() => setTimer(session), 1000);
+            setTimeout(() => setPauseBreak(!pauseBreak), 2000);
+            setTimeout(() => setTimer(session), 2000);
         }
 
         return () => {
