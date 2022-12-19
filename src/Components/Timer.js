@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import retroBeep from "./Audio/retroBeep.mp3"
 
 export default function Timer() {
 
     // State
-    const [pause, setPause] = useState(5);
-    const [session, setSession] = useState(25);
+    const [pause, setPause] = useState(300);
+    const [session, setSession] = useState(1500);
     const [timer, setTimer] = useState(1500);
-
     const [active, setActive] = useState(false);
+    const [pauseBreak, setPauseBreak] = useState(false);
 
     // Format digits
     const padTime = time => {
@@ -25,46 +26,57 @@ export default function Timer() {
         return `${minutes}:${padTime(seconds)}`;
     };
 
+    const formatMin = time => {
+
+        const minutes = Math.floor(time / 60);
+        return `${minutes}`;
+    };
+
 
     // Functions to update state
     function reset() {
-        setPause(5);
-        setSession(25);
+        setPause(300);
+        setSession(1500);
         setTimer(1500);
         setActive(false);
+        setPauseBreak(false);
+        document.getElementById("beep").pause();
+        document.getElementById("beep").currentTime = 0;
     }
 
     function handlePauseDec() {
-        if (active === false) {
-            if (pause > 1) {
-                setPause(pause - 1)
-            }
+        if (active === false && pause > 60 && !pauseBreak) {
+            setPause(pause - 60)
+        } else if (active === false && pause > 60 && pauseBreak) {
+            setPause(pause - 60);
+            setTimer(timer - 60);
         }
     }
 
     function handlePauseInc() {
-        if (active === false) {
-            if (pause < 60) {
-                setPause(pause + 1)
-            }
+        if (active === false && pause < 3600 && !pauseBreak) {
+            setPause(pause + 60)
+        } else if (active === false && pause < 3600 && pauseBreak) {
+            setPause(pause + 60);
+            setTimer(timer + 60);
         }
     }
 
     function handleSessionDec() {
-        if (active === false) {
-            if (session > 1) {
-                setSession(session - 1);
-                setTimer(timer - 60);
-            }
+        if (active === false && session > 60 && !pauseBreak) {
+            setSession(session - 60);
+            setTimer(timer - 60);
+        } else if (active === false && session > 60 && pauseBreak) {
+            setSession(session - 60);
         }
     }
 
     function handleSessionInc() {
-        if (active === false) {
-            if (session < 60) {
-                setSession(session + 1)
-                setTimer(timer + 60);
-            }
+        if (active === false && session < 3600 && !pauseBreak) {
+            setSession(session + 60)
+            setTimer(timer + 60);
+        } else if (active === false && session < 3600 && pauseBreak) {
+            setSession(session + 60);
         }
     }
 
@@ -74,9 +86,29 @@ export default function Timer() {
 
 
     React.useEffect(() => {
+
         let clock;
-        if (timer > 0 && active) {
+
+        const el = document.getElementById("beep");
+
+        if (timer > 0 && active && !pauseBreak) {
             clock = setTimeout(() => setTimer(timer => timer - 1), 1000);
+        }
+
+        else if (timer === 0 && active && !pauseBreak) {
+            el.play();
+            setPauseBreak(!pauseBreak);
+            setTimer(pause);
+        }
+
+        else if (timer > 0 && active && pauseBreak) {
+            clock = setTimeout(() => setTimer(timer => timer - 1), 1000);
+        }
+
+        else if (timer === 0 && active && pauseBreak) {
+            el.play();
+            setPauseBreak(!pauseBreak);
+            setTimer(session);
         }
 
         return () => {
@@ -84,7 +116,8 @@ export default function Timer() {
                 clearTimeout(clock);
             }
         };
-    }, [timer, active]);
+
+    }, [timer, active, pause, pauseBreak, session]);
 
 
     return (
@@ -101,7 +134,7 @@ export default function Timer() {
                         Break Length
                     </h5>
                     <p id="break-length" className="mb-6 font-normal text-xl text-gray-900 dark:text-white">
-                        {pause}
+                        {formatMin(pause)}
                     </p>
                     <div className='flex flex-row justify-evenly'>
                         <div className="inline-flex rounded-md shadow-sm" role="group">
@@ -126,7 +159,7 @@ export default function Timer() {
                         Session Length
                     </h5>
                     <p id="session-length" className="mb-6 font-normal text-xl text-gray-900 dark:text-white">
-                        {session}
+                        {formatMin(session)}
                     </p>
                     <div className='flex flex-row justify-evenly'>
                         <div className="inline-flex rounded-md shadow-sm" role="group">
@@ -148,8 +181,11 @@ export default function Timer() {
             {/*Flex for Cards */}
             {/*Session */}
             <div className="flex flex-col gap-4 p-6 bg-white rounded-md dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                <h5 id="timer-label" className="text-2xl text-black dark:text-white">Session</h5>
+                <h5 id="timer-label" className="text-2xl text-black dark:text-white">{pauseBreak ? "Break" : "Session"}</h5>
                 <span id="time-left" className='text-8xl text-black dark:text-white'>{format(timer)}</span>
+                <audio id='beep'>
+                    <source src={retroBeep} type="audio/mpeg" />
+                </audio>
 
                 {/*Start & Reset Buttons */}
                 <div className='flex flex-row mt-4'>
