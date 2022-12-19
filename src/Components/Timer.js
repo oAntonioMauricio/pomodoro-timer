@@ -121,7 +121,7 @@ export default function Timer() {
 
 
     return (
-        <div className='flex flex-col gap-7'>
+        <div className='flex flex-col gap-7 px-4 sm:px-0'>
 
             <h1 className='text-white text-2xl mb-5'>⌛ Pomodoro Timer ⌛</h1>
 
