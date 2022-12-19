@@ -49,7 +49,7 @@ export default function Timer() {
             setPause(pause - 60)
         } else if (active === false && pause > 60 && pauseBreak) {
             setPause(pause - 60);
-            setTimer(timer - 60);
+            setTimer(pause - 60);
         }
     }
 
@@ -58,14 +58,14 @@ export default function Timer() {
             setPause(pause + 60)
         } else if (active === false && pause < 3600 && pauseBreak) {
             setPause(pause + 60);
-            setTimer(timer + 60);
+            setTimer(pause + 60);
         }
     }
 
     function handleSessionDec() {
         if (active === false && session > 60 && !pauseBreak) {
             setSession(session - 60);
-            setTimer(timer - 60);
+            setTimer(session - 60);
         } else if (active === false && session > 60 && pauseBreak) {
             setSession(session - 60);
         }
@@ -74,7 +74,7 @@ export default function Timer() {
     function handleSessionInc() {
         if (active === false && session < 3600 && !pauseBreak) {
             setSession(session + 60)
-            setTimer(timer + 60);
+            setTimer(session + 60);
         } else if (active === false && session < 3600 && pauseBreak) {
             setSession(session + 60);
         }
