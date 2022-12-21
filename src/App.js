@@ -1,6 +1,4 @@
 import './App.css';
-import "./Components/Pomodoro"
-
 import Timer from './Components/Timer';
 
 function App() {
