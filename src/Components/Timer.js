@@ -38,7 +38,7 @@ export default function Timer() {
     // The callback will be called every 1000 milliseconds.
     const intimer = useTimer({ delay: 1000 }, callback);
 
-    //NEW TEST
+    //Effect for a little 2sec stop after reaching 0
     React.useEffect(() => {
 
         const el = document.getElementById("beep");
@@ -46,7 +46,6 @@ export default function Timer() {
         if (timer === 0) {
             el.play();
             intimer.stop();
-            
             setTimeout(() => intimer.start(), 2000);
         }
 
