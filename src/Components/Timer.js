@@ -42,18 +42,18 @@ export default function Timer() {
     React.useEffect(() => {
 
         const el = document.getElementById("beep");
-        const label = document.getElementById("timer-label");
+        //const label = document.getElementById("timer-label");
 
         if (timer === 0) {
 
             intimer.stop();
             el.play();
 
-            if (!pauseBreak) {
-                label.innerHTML = "Time for a Break! 👏";
-            } else {
-                label.innerHTML = "Let's focus! 🖊️"
-            }
+            //if (!pauseBreak) {
+            //    label.innerHTML = "Time for a Break! 👏";
+            //} else {
+            //    label.innerHTML = "Let's focus! 🖊️"
+            //}
 
             let delay = setTimeout(() => intimer.start(), 2000);
 
@@ -207,7 +207,7 @@ export default function Timer() {
             {/*Flex for Cards */}
             {/*Session */}
             <div className="flex flex-col gap-4 p-6 bg-white rounded-md dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                <h5 id="timer-label" className="text-2xl text-black dark:text-white">{pauseBreak ? "Break" : "Session"}</h5>
+                <h5 id="timer-label" className="text-2xl text-black dark:text-white">{active && !pauseBreak ? "Let's Focus! 🖊️" : active && pauseBreak ? "Time For a Break! 👏" : "Session"}</h5>
                 <span id="time-left" className='text-8xl text-black dark:text-white'>{format(timer)}</span>
                 <audio id='beep'>
                     <source src={retroBeep} type="audio/mpeg" />
