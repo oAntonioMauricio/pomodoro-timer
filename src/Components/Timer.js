@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import retroBeep from "./Audio/retroBeep.mp3"
+import { useTimer } from 'react-use-precision-timer';
 
 export default function Timer() {
 
@@ -9,6 +10,47 @@ export default function Timer() {
     const [timer, setTimer] = useState(1500);
     const [active, setActive] = useState(false);
     const [pauseBreak, setPauseBreak] = useState(false);
+
+    // useTimer NPM
+    // Function for timer rules (when to remove from timer, when to play sound, when to start the break, when to start timer again)
+    const callback = React.useCallback(() => {
+
+        if (timer > 0 && active && !pauseBreak) {
+            setTimer(timer => timer - 1);
+        }
+
+        else if (timer === 0 && active && !pauseBreak) {
+            setPauseBreak(!pauseBreak);
+            setTimer(pause);
+        }
+
+        else if (timer > 0 && active && pauseBreak) {
+            setTimer(timer => timer - 1);
+        }
+
+        else if (timer === 0 && active && pauseBreak) {
+            setPauseBreak(!pauseBreak);
+            setTimer(session);
+        }
+
+    }, [active, pause, pauseBreak, session, timer]);
+
+    // The callback will be called every 1000 milliseconds.
+    const intimer = useTimer({ delay: 1000 }, callback);
+
+    //NEW TEST
+    React.useEffect(() => {
+
+        const el = document.getElementById("beep");
+
+        if (timer === 0) {
+            el.play();
+            intimer.stop();
+            
+            setTimeout(() => intimer.start(), 2000);
+        }
+
+    }, [timer, intimer]);
 
     // Format digits
     const padTime = time => {
@@ -40,6 +82,7 @@ export default function Timer() {
         setTimer(1500);
         setActive(false);
         setPauseBreak(false);
+        intimer.stop();
         document.getElementById("beep").pause();
         document.getElementById("beep").currentTime = 0;
     }
@@ -81,45 +124,15 @@ export default function Timer() {
     }
 
     function startPause() {
-        setActive(!active);
-        document.getElementById("beep").load();
+        if (!active) {
+            setActive(!active);
+            intimer.start()
+            document.getElementById("beep").load();
+        } else {
+            setActive(!active);
+            intimer.stop()
+        }
     }
-
-
-    React.useEffect(() => {
-
-        let clock;
-
-        const el = document.getElementById("beep");
-
-        if (timer > 0 && active && !pauseBreak) {
-            clock = setTimeout(() => setTimer(timer => timer - 1), 1000);
-        }
-
-        else if (timer === 0 && active && !pauseBreak) {
-            el.play();
-            setTimeout(() => setPauseBreak(!pauseBreak), 2000);
-            setTimeout(() => setTimer(pause), 2000);
-        }
-
-        else if (timer > 0 && active && pauseBreak) {
-            clock = setTimeout(() => setTimer(timer => timer - 1), 1000);
-        }
-
-        else if (timer === 0 && active && pauseBreak) {
-            el.play();
-            setTimeout(() => setPauseBreak(!pauseBreak), 2000);
-            setTimeout(() => setTimer(session), 2000);
-        }
-
-        return () => {
-            if (clock) {
-                clearTimeout(clock);
-            }
-        };
-
-    }, [timer, active, pause, pauseBreak, session]);
-
 
     return (
         <div className='flex flex-col gap-7 px-4 sm:px-0'>
