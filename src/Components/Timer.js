@@ -42,14 +42,27 @@ export default function Timer() {
     React.useEffect(() => {
 
         const el = document.getElementById("beep");
+        const label = document.getElementById("timer-label");
 
         if (timer === 0) {
-            el.play();
+
             intimer.stop();
-            setTimeout(() => intimer.start(), 2000);
+            el.play();
+
+            if (!pauseBreak) {
+                label.innerHTML = "Time for a Break! 👏";
+            } else {
+                label.innerHTML = "Let's focus! 🖊️"
+            }
+
+            let delay = setTimeout(() => intimer.start(), 2000);
+
+            return () => {
+                clearTimeout(delay)
+            }
         }
 
-    }, [timer, intimer]);
+    }, [timer, intimer, active, pauseBreak]);
 
     // Format digits
     const padTime = time => {
