@@ -86,6 +86,19 @@ export default function Timer() {
         return `${minutes}`;
     };
 
+    // Update the HTML Title and display the time left
+    let htmlTime = format(timer);
+
+    React.useEffect(() => {
+
+        // This will run when the page first loads and whenever the title changes
+        if (active || timer < session || timer < pause) {
+            document.title = `${htmlTime} ${!pauseBreak ? "🖊️" : "👏"} - Pomodoro Timer`;
+        } else {
+            document.title = `Pomodoro Timer`
+        }
+
+    }, [htmlTime, timer, session, active, pause, pauseBreak]);
 
     // Functions to update state
     function reset() {
