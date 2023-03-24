@@ -160,9 +160,9 @@ export default function Timer() {
     }
 
     return (
-        <div className='flex flex-col gap-7 px-4 sm:px-0'>
+        <div className='flex flex-col gap-7 px-4 sm:px-0 grow justify-center'>
 
-            <h1 className='text-white text-2xl mb-5'>⌛ Pomodoro Timer ⌛</h1>
+            <h1 className='text-black dark:text-white text-2xl mb-5'>⌛ Pomodoro Timer ⌛</h1>
 
             {/*Flex for Cards */}
             <div className='flex flex-row gap-5'>
@@ -219,7 +219,7 @@ export default function Timer() {
             </div>
             {/*Flex for Cards */}
             {/*Session */}
-            <div className="flex flex-col gap-4 p-6 bg-white rounded-md dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col gap-4 p-6 bg-white rounded-md dark:bg-gray-800 border border-gray-200 shadow-md dark:border-gray-700">
                 <h5 id="timer-label" className="text-2xl text-black dark:text-white">{active && !pauseBreak ? "Let's Focus! 🖊️" : active && pauseBreak ? "Time For a Break! 👏" : "Session"}</h5>
                 <span id="time-left" className='text-8xl text-black dark:text-white'>{format(timer)}</span>
                 <audio id='beep'>
